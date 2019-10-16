@@ -1,60 +1,58 @@
 # AnimArch
 Repozitár tímu ArchMages19.
-## GitHub metodika
-Pravidlá práce s GitHub:  
+## **Pravidlá práce s GitHub:**
 1. V prípade, že člen tímu chce spraviť merge do upstream/master musí vytvoriť pull request, ktorý musí nechať skontrolovať iným členom tímu
+2. Commit musí obsahovať správu, ktorá jasne vyjadruje zmysel daného commitu a čo sa zmení po aplikovaní daného commitu [návod](https://chris.beams.io/posts/git-commit/)
+3. Master vetva v lokálnom repozitári, by mala byť vždy zhodná s upstream/master vetvou
 
-2. Commit musí obsahovať správu, ktorá jasne vyjadruje zmysel daného commitu a čo sa zmení po aplikovaní daného commitu [Návod](https://chris.beams.io/posts/git-commit/)
-
-3. Master vetva v lokalnom repozitári, by mala byť vždy zhodná s upstream/master vetvou
-
-## GitHub príkazi
-Pristup do vzdialených repozitárov:
+## **GitHub príkazy**
+**Prístup do vzdialených repozitárov:**
 ```
-git remote -v                                   - zobrazí názvi a url adresi vzdialených repozitárov
-git remote add <name_of_remote> <url_of_remote> - pridá prepojenie vzdialeného repozitára s menom <name_of_remote> pod url adresov <url_of_remote>
-git remote remove <name_of_remote>              - zmazé prepojenie vzdialeného repozitára s menom <name_of_remote>
-git clone <repo_url>                            - stiahne všetko zo vzdialeného repozitára s url <repo_url> do lokálneho repozitára
+git remote -v                                 - zobrazí názvy a url adresy vzdialených repozitárov
+git remote add <názov remote> <adresa remote> - pridá prepojenie vzdialeného repozitára s menom <názov remote> pod url adresou <adresa remote>
+git remote remove <názov remote>              - zmaže prepojenie vzdialeného repozitára s menom <názov remote>
+git clone <adresa remote>                     - stiahne všetko zo vzdialeného repozitára s url <adresa remote> do lokálneho repozitára
 ```
-Správa vetiev:
+
+**Správa vetiev:**
 ```
 git branch                    - zobrazí lokálne vetvi
 git branch -a                 - zobrazí všetky vetvi
-git branch -D <branch_name>   - odstráni vetvu s menom <branch_name>
-git checkout <branch_name>    - aktivuje vetvu s menom <branch_name>
-git checkout -b <branch_name> - vytvori novu vetvu s menom <branch_name> a aktivuje ju
-```
-Správa localného repozitára:
-```
-git status                             - zobrazí aktuálny stav lokalného repozitára oproti origin (viac info)
-git checkout                           - zobrazí aktuálny stav lokalného repozitára oproti origin
-git diff                               - zobrazi rozdieli lokalného repozitára oproti origin
-git diff <branch_name>                 - zobrazi rozdieli lokalného repozitára oproti vetve s menom <branch_name>
-git diff <branch_name1> <branch_name2> - zobrazi rozdieli vetvi s menom <branch_name1> s vetvom s menomn <branch_name2>
-```
-Správou kódu lokálneho repozitára:
-```
-git add <file_path>              - pridá subor do listu, ktoré budú commitnuté
-git restore --staged <file_path> - odstráni súbor z listu, ktoré majú byť commitnuté
-git checkout <file_path>         - obnový súbor do pôvodného stavu
-git commit -m "<message>"        - commitne súbory, ktoré sa nachádzaju v liste súborov, ktoré sa maju commitnúť, commit bude obsahovať správu <message>
-git push                         - posle aktuálnu vetvu do tej istej vetvi, ale vo vdialenóm repozitáre
-git push -u origin <branch_name> - vytvorí novú vetvu vo vzdialenom repozitári s menon <branch_name> a posle tam aktuálnu vetvu
-git pull                         - stiahne aktuálnu vetvu zo vzdialeného repozitára
-git pull <branch_name>           - stiahne vetvu s menom <branch_name> zo vzdialeného repozitára
-git stash                        - uloži zmeny do stash
-git stash pop                    - vyberie posledné užené znemy zo stash a aplikuje ich
+git branch -D <názov vetvy>   - odstráni vetvu s menom <názov vetvy>
+git checkout <názov vetvy>    - aktivuje vetvu s menom <názov vetvy>
+Git checkout -b <názov vetvy> - vytvorí novu vetvu s menom <názov vetvy> a aktivuje ju
 ```
 
-## GitHub príklady
-Stiahnutie najnovšiej verzie kódu, upravenie kódu, aktualizovanie vzdialeného repozitára a vyžiadanie pull requestu.
+**Správa lokálneho repozitára:**
 ```
-git checkout master
-git pull upstream/master
-git checkout -b <feature/meno_novej_feature>
-"Vykonanie zmien v kóde + pridanie nového súboru
-git add --all
-git commit -m "<Správa ktorá vyjadruje čo daný commit zmení v kóde>"
-git push -u origin <feature/meno_novej_feature>
-"Vytvorenie pull requestu na GitHub stránke, pre vetvu <feature/meno_novej_feature>"
+git status                               - zobrazí aktuálny stav lokálneho repozitára oproti origin (viac info)
+git checkout                             - zobrazí aktuálny stav  lokálneho repozitára oproti origin
+git diff                                 - zobrazí rozdiely lokálneho repozitára oproti origin
+git diff <názov vetvy>                   - zobrazí rozdiely lokálneho repozitára oproti vetve s menom <názov vetvy>
+git diff <názov vetvy 1> <názov vetvy 2> - zobrazí rozdiely vetvi <názov vetvy 1> s vetvou <názov vetvy 2>
 ```
+
+**Správou kódu lokálneho repozitára:**
+```
+git add <cesta súboru>              - pridá súbor do listu, ktoré budú commitnuté
+git restore --staged <cesta súboru> - odstráni súbor z listu, ktoré majú byť commitnuté
+git checkout <cesta súboru>         - obnovy súbor do pôvodného stavu
+git commit -m "<message>"           - commitne súbory, ktoré sa nachádzajú v liste súborov, ktoré sa majú commitnúť, commit bude obsahovať správu <message>|
+git push                            - pošle aktuálnu vetvu do tej istej vetvi, ale vo vzdialenom repozitáre
+git push -u origin <názov vetvy>    - vytvorí novú vetvu vo vzdialenom repozitári s menom <názov vetvy> a pošle tam aktuálnu vetvu
+git pull                            - stiahne aktuálnu vetvu zo vzdialeného repozitára
+git pull <názov vetvy>              - stiahne vetvu s menom <názov vetvy> zo vzdialeného repozitára
+git stash                           - uloží zmeny do stash
+git stash pop                       - vyberie posledné uložené zmeny zo stash a aplikuje ich
+```
+
+**GitHub príklad** (Stiahnutie najnovšej verzie kódu, upravenie kódu, aktualizovanie vzdialeného repozitára a vyžiadanie pull requestu.)
+
+1. git checkout master  
+2. git pull upstream/master  
+3. git checkout -b <feature/meno_novej_feature>  
+4. "Vykonanie zmien v kóde + pridanie nového súboru  
+5. git add --all  
+6. git commit -m "<Správa ktorá vyjadruje čo daný commit zmení v kóde>"  
+7. git push -u origin <feature/meno_novej_feature>  
+8. "Vytvorenie pull requestu na GitHub stránke, pre vetvu <feature/meno_novej_feature>"  
