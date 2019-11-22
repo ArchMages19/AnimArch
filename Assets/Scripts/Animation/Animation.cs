@@ -2,100 +2,152 @@
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.UI;
 
 public class Animation : Singleton<Animation>
 {
-    
+    public List<Anim> animations;
     [SerializeField]
     private float animationSpeed=2f;
     private ClassDiagram classDiagram;
     [SerializeField]
-    private TMP_InputField input; 
+    private TMP_InputField input;
+    [SerializeField]
+    private Slider speedSlider;
+    [SerializeField]
+    private TMP_Text speedLabel;
     private void Awake()
     {
         classDiagram = GameObject.Find("ClassDiagram").GetComponent<ClassDiagram>();
+        animations = new List<Anim>();
+        UpdateAnimationSpeed();
     }
-    public IEnumerator Animate()
-    {
-        yield return StartCoroutine(AnimateClass("ElementA"));
-        yield return new WaitForSeconds(animationSpeed);
+     public IEnumerator Animate()
+     {
+        yield return StartCoroutine(ResolveCallFunct("ElementA", "OperationA() :void", "Visitor", "OperationA() :void", animationSpeed));
+        StartCoroutine(ResolveCallFunct("Visitor", "OperationB() :void", "ElementB", "OperationB() :void", animationSpeed));
 
-        StartCoroutine(AnimateClass("ElementA"));
-        yield return StartCoroutine(AnimateMethod("ElementA", "OperationA() :void"));
-        yield return new WaitForSeconds(animationSpeed);
-
-        StartCoroutine(AnimateClass("ElementA"));
-        StartCoroutine(AnimateClass("Visitor"));
-        StartCoroutine(AnimateMethod("ElementA", "OperationA() :void"));
-        StartCoroutine(AnimateMethod("Visitor", "OperationA() :void"));
-        yield return StartCoroutine(AnimateEdge("ElementA", "Visitor"));
-
-    }
+     }
 
 
     public void StartAnimation()
     {
         StartCoroutine("Animate");
     }
-    public IEnumerator AnimateClass(string className)
+    public IEnumerator AnimateClass(string className, float animationLength)
     {
-        Debug.Log("Animating");
+        HighlightClass(className, true);
+        yield return new WaitForSeconds(animationLength);
+        HighlightClass(className, false);
+
+    }
+
+    public IEnumerator AnimateMethod(string className, string methodName, float animationLength)
+    {
+        HighlightMethod(className, methodName, true);
+        yield return new WaitForSeconds(animationLength);
+        HighlightMethod(className, methodName, false);
+
+    }
+    public IEnumerator AnimateEdge(string classA, string classB, float animationLength)
+    {
+        HighlightEdge(classA, classB, true);
+        yield return new WaitForSeconds(animationLength);
+        HighlightEdge(classA, classB, false);
+    }
+    public void HighlightClass(string className, bool isToBeHighlighted)
+    {
         GameObject node = classDiagram.FindNode(className);
-        BackgroundHighlighter bh=null;
+        BackgroundHighlighter bh = null;
         if (node != null)
         {
             bh = node.GetComponent<BackgroundHighlighter>();
-            Debug.Log("Node found");
         }
         else
+        {
             Debug.Log("Node " + className + " not found");
+        }
         if (bh != null)
         {
-            bh.HighlightBackground();
-          
+            if (isToBeHighlighted)
+            {
+                bh.HighlightBackground();
+            }
+            else
+            {
+                bh.UnhighlightBackground();
+            }
         }
         else
-            Debug.Log("Highligher not found");
-        yield return new WaitForSeconds(animationSpeed);
-        if (bh != null)
         {
-            bh.UnhighlightBackground();
+            Debug.Log("Highligher component not found");
         }
     }
-
-    public IEnumerator AnimateMethod(string className, string methodName)
+    public void HighlightMethod(string className, string methodName, bool isToBeHighlighted)
     {
-        Debug.Log("Animating");
         GameObject node = classDiagram.FindNode(className);
         TextHighlighter th = null;
         if (node != null)
         {
             th = node.GetComponent<TextHighlighter>();
-            Debug.Log("Node found");
         }
         else
+        {
             Debug.Log("Node " + className + " not found");
+        }
         if (th != null)
         {
-            Debug.Log("Highlighting method");
-            th.HighlightLine(methodName);
+            if (isToBeHighlighted)
+            {
+                th.HighlightLine(methodName);
+            }
+            else
+            {
+                th.UnHighlightLine(methodName);
+            }
 
         }
         else
-            yield return null;
-        yield return new WaitForSeconds(animationSpeed);
-        th.UnHighlightLine(methodName);
+        {
+            Debug.Log("TextHighligher component not found");
+        }
     }
-    public IEnumerator AnimateEdge(string classA, string classB)
+    public void HighlightEdge(string classA, string classB, bool isToBeHighlighted)
     {
         GameObject edge = classDiagram.FindEdge(classA, classB);
         if (edge != null)
         {
-            edge.GetComponent<UEdge>().ChangeColor(Color.red);
-            yield return new WaitForSeconds(animationSpeed);
-            edge.GetComponent<UEdge>().ChangeColor(Color.white);
+            if (isToBeHighlighted)
+            {
+                edge.GetComponent<UEdge>().ChangeColor(Color.red);
+            }
+            else
+            {
+                edge.GetComponent<UEdge>().ChangeColor(Color.white);
+            }
         }
         else
-            Debug.Log("null edge");
+        {
+            Debug.Log(classA + " NULL Edge " + classB);
+        }
+    }
+    public IEnumerator ResolveCallFunct(string classA,string methodA, string classB, string methodB, float speedPerAnim)
+    {
+        StartCoroutine(AnimateClass(classA,speedPerAnim*5));
+        yield return new WaitForSeconds(speedPerAnim);
+        StartCoroutine(AnimateMethod(classA,methodA,speedPerAnim*4));
+        yield return new WaitForSeconds(speedPerAnim);
+        StartCoroutine(AnimateEdge(classA, classB, speedPerAnim *4));
+        yield return new WaitForSeconds(speedPerAnim);
+        StartCoroutine(AnimateClass(classB, speedPerAnim * 4));
+        yield return new WaitForSeconds(speedPerAnim);
+        StartCoroutine(AnimateMethod(classB, methodB, speedPerAnim*3));
+        yield return new WaitForSeconds(speedPerAnim*4);
+
+    }
+    public void UpdateAnimationSpeed()
+    {
+        animationSpeed =speedSlider.value;
+        speedLabel.text = speedSlider.value + "s";
     }
 }

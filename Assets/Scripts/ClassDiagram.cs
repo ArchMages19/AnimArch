@@ -98,6 +98,7 @@ public class ClassDiagram : MonoBehaviour
         graph.Layout();
     }
 
+    //Arrange nodes based on EA
     public void ManualLayout()
     {
         foreach(Class c in Classes)
@@ -105,6 +106,7 @@ public class ClassDiagram : MonoBehaviour
             nodes[c.ClassName].GetComponent<RectTransform>().position = new Vector3(c.OffsetX, c.OffsetY);
         }
     }
+    //Generate nodes and relations from data stored in memory
     private void Generate()
     {
         //Render classes
@@ -130,8 +132,6 @@ public class ClassDiagram : MonoBehaviour
 
 
             //Methods
-            //TESTUJEM
-            //
             if (Classes[i].methods != null)
                 foreach (Method method in Classes[i].methods)
                 {
@@ -140,15 +140,20 @@ public class ClassDiagram : MonoBehaviour
                         for(int d = 0; d < method.arguments.Count; d++)
                         {
                             if (d < method.arguments.Count - 1)
+                            {
                                 arguments += (method.arguments[d] + ", ");
-                            else arguments += (method.arguments[d]);
+                            }
+                            else
+                            {
+                                arguments += (method.arguments[d]);
+                            }
                         }
                         arguments += ")";
 
                     methods.GetComponent<TextMeshProUGUI>().text += method.Name + arguments + " :" + method.ReturnValue+"\n";
                 }
 
-            //Add Class to Dictionary 
+            //Add Class node to Dictionary, so we can easily find it later 
             nodes.Add(node.name, node);
             
         }
@@ -158,10 +163,13 @@ public class ClassDiagram : MonoBehaviour
         {
             GameObject prefab = rel.PrefabType;
             if (prefab == null)
+            {
                 prefab = associationPrefab;
+            }
             if (nodes[rel.FromClass] != null && nodes[rel.ToClass] != null)
             {
                 GameObject edge=graph.AddEdge(nodes[rel.FromClass], nodes[rel.ToClass], rel.PrefabType);
+                //Add relation node to dictionary
                 rels.Add(rel.FromClass + "/" + rel.ToClass, edge);
             }
             else
