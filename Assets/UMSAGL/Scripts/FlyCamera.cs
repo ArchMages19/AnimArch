@@ -83,14 +83,15 @@ public class FlyCamera : MonoBehaviour
 		Vector3 p_Velocity = new Vector3();
 
 		// Forwards
-		if (Input.GetKey(KeyCode.W)||ToolManager.Instance.ZoomingIn)
+		if (ToolManager.Instance.ZoomingIn)
 			p_Velocity += new Vector3(0, 0, 1);
 
 		// Backwards
-		if (Input.GetKey(KeyCode.S)||ToolManager.Instance.ZoomingOut)
+		if (ToolManager.Instance.ZoomingOut)
 			p_Velocity += new Vector3(0, 0, -1);
 
 		// Left
+        /*
 		if (Input.GetKey(KeyCode.A))
 			p_Velocity += new Vector3(-1, 0, 0);
 
@@ -105,7 +106,7 @@ public class FlyCamera : MonoBehaviour
 		// Down
 		if (Input.GetKey(KeyCode.LeftControl))
 			p_Velocity += new Vector3(0, -1, 0);
-
+            */
 		return p_Velocity;
 	}
 }
